@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="maven-antrun-" default="main">
+  <target name="main">
+    <property name="target.webapp.dir" value="C:\Users\quiqu\eclipse-workspace-aiis\pokemon-api-groupproject\target/lab5-implementing-restapi-1.0-SNAPSHOT" />
+    <property name="src.webapp.dir" value="C:\Users\quiqu\eclipse-workspace-aiis\pokemon-api-groupproject/src/main/webapp" />
+    <sync todir="${target.webapp.dir}" includeEmptyDirs="true" verbose="true">
+      <fileset dir="${src.webapp.dir}" />
+      <preserveintarget>
+        <include name="WEB-INF/lib/**" />
+        <include name="WEB-INF/classes/**" />
+        <include name="WEB-INF/appengine-generated/**" />
+      </preserveintarget>
+    </sync>
+  </target>
+</project>
