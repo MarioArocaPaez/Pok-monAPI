@@ -18,11 +18,9 @@ import org.jboss.resteasy.spi.NotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-import aiss.model.Playlist;
 import aiss.model.Pokemon;
-import aiss.model.Song;
-import aiss.model.repository.MapPlaylistRepository;
-import aiss.model.repository.PlaylistRepository;
+import aiss.model.repository.MapTrainerRepository;
+import aiss.model.repository.TrainerRepository;
 
 import java.net.URI;
 import java.util.Collection;
@@ -33,10 +31,10 @@ import java.util.Collection;
 public class PokemonResource {
 
 	public static PokemonResource _instance=null;
-	PlaylistRepository repository;
+	TrainerRepository repository;
 	
 	private PokemonResource(){
-		repository=MapPlaylistRepository.getInstance();
+		repository=MapTrainerRepository.getInstance();
 	}
 	
 	public static PokemonResource getInstance()
@@ -88,31 +86,37 @@ public class PokemonResource {
 	
 	@PUT
 	@Consumes("application/json")
-	public Response updateSong(Song song) {
-		Song oldsong = repository.getSong(song.getId());
-		if (oldsong == null) {
-			throw new NotFoundException("The song with id="+ song.getId() +" was not found");			
+	public Response updatePokemon(Pokemon poke) {
+		Pokemon oldpoke = repository.getPokemon(poke.getId());
+		if (oldpoke == null) {
+			throw new NotFoundException("The pokemon with id="+ poke.getId() +" was not found");			
 		}
 
 		// Update name
-		if (song.getTitle()!=null)
-			oldsong.setTitle(song.getTitle());
+		if (poke.getName()!=null)
+			oldpoke.setName(poke.getName());
 		
 		// Update description
-		if (song.getArtist()!=null)
-			oldsong.setArtist(song.getArtist());
+		if (poke.getType1()!=null)
+			oldpoke.setType1(poke.getType1());
+		if (poke.getType2()!=null)
+			oldpoke.setType2(poke.getType2());
+		if (poke.getGeneration()!=null)
+			oldpoke.setGeneration(poke.getGeneration());
+		if (poke.getLegend()!=null)
+			oldpoke.setLegend(poke.getLegend());
 		
 		return Response.noContent().build();
 	}
 	
 	@DELETE
 	@Path("/{id}")
-	public Response removeSong(@PathParam("id") String songId) {
-		Song toberemoved=repository.getSong(songId);
+	public Response removePokemon(@PathParam("id") String pokeId) {
+		Pokemon toberemoved=repository.getPokemon(pokeId);
 		if (toberemoved == null)
-			throw new NotFoundException("The song with id="+ songId +" was not found");
+			throw new NotFoundException("The pokemon with id="+ pokeId +" was not found");
 		else
-			repository.deleteSong(songId);
+			repository.deletePokemon(pokeId);
 		
 		return Response.noContent().build();
 	}
