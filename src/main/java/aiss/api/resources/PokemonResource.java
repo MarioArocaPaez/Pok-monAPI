@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import aiss.model.Pokemon;
+import aiss.model.Trainer;
 import aiss.model.repository.MapTrainerRepository;
 import aiss.model.repository.TrainerRepository;
 
@@ -71,7 +72,7 @@ public class PokemonResource {
 	@Produces("application/json")
 	public Response addPokemon(@Context UriInfo uriInfo, Pokemon poke) {
 		if (poke.getName() == null || "".equals(poke.getName()))
-			throw new BadRequestException("The name of the song must not be null");
+			throw new BadRequestException("The name of the Pokémon must not be null");
 
 		repository.addPokemon(poke);
 
@@ -105,7 +106,13 @@ public class PokemonResource {
 			oldpoke.setGeneration(poke.getGeneration());
 		if (poke.getLegend()!=null)
 			oldpoke.setLegend(poke.getLegend());
-		
+		if (poke.getHp()!=null)
+			oldpoke.setHp(poke.getHp());
+		if (poke.getAttack()!=null)
+			oldpoke.setAttack(poke.getAttack());
+		if (poke.getDefense()!=null)
+			oldpoke.setDefense(poke.getDefense());
+
 		return Response.noContent().build();
 	}
 	
@@ -118,6 +125,9 @@ public class PokemonResource {
 		else
 			repository.deletePokemon(pokeId);
 		
+			for(Trainer a: repository.getAllTrainers()) {
+				repository.removePokemon(a.getId(), pokeId);
+			}
 		return Response.noContent().build();
 	}
 	

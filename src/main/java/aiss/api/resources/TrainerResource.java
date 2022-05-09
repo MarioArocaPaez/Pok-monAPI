@@ -3,6 +3,7 @@ package aiss.api.resources;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -33,7 +34,7 @@ import aiss.model.repository.MapTrainerRepository;
 
 
 
-@Path("/lists")
+@Path("/trainers")
 public class TrainerResource {
 	
 	/* Singleton */
@@ -87,46 +88,72 @@ public class TrainerResource {
 	}
 	
 	@POST
-	@Consumes("application/json")
-	@Produces("application/json")
-	public Response addTrainer(@Context UriInfo uriInfo, Trainer trainer) {
-		if (trainer.getName() == null || "".equals(trainer.getName()))
-			throw new BadRequestException("The name of the Trainer must not be null");
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response addTrainer(@Context UriInfo uriInfo, Trainer trainer) {
+        if (trainer.getName() == null || "".equals(trainer.getName()))
+            throw new BadRequestException("The name of the Trainer must not be null");
+        
+        List<String> everyPokemonsId = repository.getAllPokemons().stream().map(x->x.getId()).collect(Collectors.toList());
+        List<Pokemon> listpoke = new ArrayList<>();
+        
+        for (Pokemon pkmn : trainer.getPokemons()) {
+            if (everyPokemonsId.contains(pkmn.getId())) {
+                pkmn = repository.getPokemon(pkmn.getId());
+                listpoke.add(pkmn);
+            }
+        }
+        trainer.setPokemons(listpoke);
+        repository.addTrainer(trainer);
 
-		repository.addTrainer(trainer);
-
-		// Builds the response. Returns the Trainer the has just been added.
-		UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
-		URI uri = ub.build(trainer.getId());
-		ResponseBuilder resp = Response.created(uri);
-		resp.entity(trainer);			
-		return resp.build();
-	}
+        // Builds the response. Returns the Trainer the has just been added.
+        UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
+        URI uri = ub.build(trainer.getId());
+        ResponseBuilder resp = Response.created(uri);
+        resp.entity(trainer);            
+        return resp.build();
+    }
 
 	
-	@PUT
-	@Consumes("application/json")
-	public Response updateTrainer(Trainer trainer) {
-		Trainer oldtrainer = repository.getTrainer(trainer.getId());
-		if (oldtrainer == null) {
-			throw new NotFoundException("The Trainer with id="+ trainer.getId() +" was not found");			
-		}
-		
-		// Update name
-		if (trainer.getName()!=null)
-			oldtrainer.setName(trainer.getName());
-		
-		// Update Age
-		if (trainer.getAge()!=null)
-			oldtrainer.setAge(trainer.getAge());
-		
-		// Update Gender
-		if (trainer.getGender() != null) {
-			oldtrainer.setGender(trainer.getGender());
-		}
-		
-		return Response.noContent().build();
-	}
+    @PUT
+    @Consumes("application/json")
+    public Response updateTrainer(Trainer trainer) {
+        Trainer oldtrainer = repository.getTrainer(trainer.getId());
+        if (oldtrainer == null) {
+            throw new NotFoundException("The Trainer with id="+ trainer.getId() +" was not found");            
+        }
+        
+        List<String> everyPokemonsId = repository.getAllPokemons().stream().map(x->x.getId()).collect(Collectors.toList());
+        List<Pokemon> listpoke = new ArrayList<>();
+        
+        for (Pokemon pkmn : trainer.getPokemons()) {
+            if (everyPokemonsId.contains(pkmn.getId())) {
+                pkmn = repository.getPokemon(pkmn.getId());
+                listpoke.add(pkmn);
+            }
+        }
+        trainer.setPokemons(listpoke);
+        
+        // Update name
+        if (trainer.getName()!=null)
+            oldtrainer.setName(trainer.getName());
+        
+        // Update Age
+        if (trainer.getAge()!=null)
+            oldtrainer.setAge(trainer.getAge());
+        
+        // Update Gender
+        if (trainer.getGender() != null) {
+            oldtrainer.setGender(trainer.getGender());
+        }
+        
+        // Update Pokemons
+        if (trainer.getPokemons() != null) {
+            oldtrainer.setPokemons(trainer.getPokemons());
+        }
+        
+        return Response.noContent().build();
+    }
 	
 	@DELETE
 	@Path("/{id}")
@@ -170,18 +197,18 @@ public class TrainerResource {
 	
 	@DELETE
 	@Path("/{trainerId}/{pokemonId}")
-	public Response removePokemon(@PathParam("trainerId") String trainerId, @PathParam("PokemonId") String PokemonId) {
+	public Response removePokemon(@PathParam("trainerId") String trainerId, @PathParam("pokemonId") String pokemonId) {
 		Trainer trainer = repository.getTrainer(trainerId);
-		Pokemon pokemon = repository.getPokemon(PokemonId);
+		Pokemon pokemon = repository.getPokemon(pokemonId);
 		
 		if (trainer==null)
 			throw new NotFoundException("The Trainer with id=" + trainerId + " was not found");
 		
 		if (pokemon == null)
-			throw new NotFoundException("The Pokemon with id=" + PokemonId + " was not found");
+			throw new NotFoundException("The Pokemon with id=" + pokemonId + " was not found");
 		
 		
-		repository.removePokemon(trainerId, PokemonId);		
+		repository.removePokemon(trainerId, pokemonId);		
 		
 		return Response.noContent().build();
 	}

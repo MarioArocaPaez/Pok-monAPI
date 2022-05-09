@@ -16,7 +16,7 @@
 		<servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
 		<init-param>
 			<param-name>javax.ws.rs.Application</param-name>
-			<param-value>aiss.api.MusicApplication</param-value>
+			<param-value>aiss.api.GameFreakApplication</param-value>
 		</init-param>
 	</servlet>		
 	

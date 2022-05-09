@@ -13,7 +13,8 @@ public class MapTrainerRepository implements TrainerRepository{
 	Map<String, Trainer> trainerMap;
 	Map<String, Pokemon> pokemonMap;
 	private static MapTrainerRepository instance=null;
-	private int index=0;			
+	private int indexT=0;			
+	private int indexP=0;
 	
 	
 	public static MapTrainerRepository getInstance() {
@@ -35,7 +36,6 @@ public class MapTrainerRepository implements TrainerRepository{
 		Pokemon pikachu=new Pokemon();
 		pikachu.setName("Pikachu");
 		pikachu.setType1("Electric");
-		pikachu.setType2(null);
 		pikachu.setHp(50);
 		pikachu.setAttack(60);
 		pikachu.setDefense(40);
@@ -44,7 +44,7 @@ public class MapTrainerRepository implements TrainerRepository{
 		addPokemon(pikachu);
 		
 		Pokemon mew=new Pokemon();
-		mew.setName("Pikachu");
+		mew.setName("Mew");
 		mew.setType1("Psychic");
 		mew.setType2(null);
 		mew.setHp(75);
@@ -53,6 +53,204 @@ public class MapTrainerRepository implements TrainerRepository{
 		mew.setGeneration(1);
 		mew.setLegend(true);
 		addPokemon(mew);
+		
+		Pokemon charmander =new Pokemon();
+		charmander.setName("Charmander");
+		charmander.setType1("Fire");
+		charmander.setType2(null);
+		charmander.setHp(30);
+		charmander.setAttack(40);
+		charmander.setDefense(20);
+		charmander.setGeneration(1);
+		charmander.setLegend(false);
+		addPokemon(charmander);
+		
+		Pokemon beedrill =new Pokemon();
+		beedrill.setName("Beedrill");
+		beedrill.setType1("Bug");
+		beedrill.setType2("Poison");
+		beedrill.setHp(40);
+		beedrill.setAttack(60);
+		beedrill.setDefense(20);
+		beedrill.setGeneration(1);
+		beedrill.setLegend(false);
+		addPokemon(beedrill);
+		
+		Pokemon wingull =new Pokemon();
+		wingull.setName("Wingull");
+		wingull.setType1("Water");
+		wingull.setType2("Flying");
+		wingull.setHp(20);
+		wingull.setAttack(40);
+		wingull.setDefense(30);
+		wingull.setGeneration(3);
+		wingull.setLegend(false);
+		addPokemon(wingull);
+		
+		Pokemon pelipper =new Pokemon();
+		pelipper.setName("Pelipper");
+		pelipper.setType1("Water");
+		pelipper.setType2("Flying");
+		pelipper.setHp(40);
+		pelipper.setAttack(40);
+		pelipper.setDefense(30);
+		pelipper.setGeneration(3);
+		pelipper.setLegend(false);
+		addPokemon(pelipper);
+		
+		Pokemon magikarp =new Pokemon();
+		magikarp.setName("Magikarp");
+		magikarp.setType1("Water");
+		magikarp.setType2(null);
+		magikarp.setHp(10);
+		magikarp.setAttack(0);
+		magikarp.setDefense(10);
+		magikarp.setGeneration(1);
+		magikarp.setLegend(false);
+		addPokemon(magikarp);
+		
+		Pokemon sharpedo =new Pokemon();
+		sharpedo.setName("Sharpedo");
+		sharpedo.setType1("Water");
+		sharpedo.setType2("Dark");
+		sharpedo.setHp(30);
+		sharpedo.setAttack(70);
+		sharpedo.setDefense(25);
+		sharpedo.setGeneration(3);
+		sharpedo.setLegend(false);
+		addPokemon(sharpedo);
+		
+		Pokemon magmar =new Pokemon();
+		magmar.setName("Magmar");
+		magmar.setType1("Fire");
+		magmar.setType2(null);
+		magmar.setHp(60);
+		magmar.setAttack(60);
+		magmar.setDefense(50);
+		magmar.setGeneration(2);
+		magmar.setLegend(false);
+		addPokemon(magmar);
+		
+		Pokemon groudon =new Pokemon();
+		groudon.setName("Groudon");
+		groudon.setType1("Ground");
+		groudon.setType2(null);
+		groudon.setHp(80);
+		groudon.setAttack(69);
+		groudon.setDefense(80);
+		groudon.setGeneration(3);
+		groudon.setLegend(true);
+		addPokemon(groudon);
+		
+		Pokemon charizard =new Pokemon();
+		charizard.setName("Charizard");
+		charizard.setType1("Fire");
+		charizard.setType2("Flying");
+		charizard.setHp(50);
+		charizard.setAttack(70);
+		charizard.setDefense(40);
+		charizard.setGeneration(1);
+		charizard.setLegend(false);
+		addPokemon(charizard);
+		
+		Pokemon zubat =new Pokemon();
+		zubat.setName("Zubat");
+		zubat.setType1("Poison");
+		zubat.setType2("Flying");
+		zubat.setHp(20);
+		zubat.setAttack(30);
+		zubat.setDefense(10);
+		zubat.setGeneration(1);
+		zubat.setLegend(false);
+		addPokemon(zubat);
+		
+		Pokemon crobat =new Pokemon();
+		crobat.setName("Crobat");
+		crobat.setType1("Poison");
+		crobat.setType2("Flying");
+		crobat.setHp(40);
+		crobat.setAttack(60);
+		crobat.setDefense(25);
+		crobat.setGeneration(2);
+		crobat.setLegend(false);
+		addPokemon(crobat);
+		
+		Pokemon venosaur =new Pokemon();
+		venosaur.setName("Venosaur");
+		venosaur.setType1("Grass");
+		venosaur.setType2("Poison");
+		venosaur.setHp(80);
+		venosaur.setAttack(40);
+		venosaur.setDefense(70);
+		venosaur.setGeneration(1);
+		venosaur.setLegend(false);
+		addPokemon(venosaur);
+		
+		Pokemon bastiodon =new Pokemon();
+		bastiodon.setName("Bastiodon");
+		bastiodon.setType1("Rock");
+		bastiodon.setType2("Steel");
+		bastiodon.setHp(90);
+		bastiodon.setAttack(30);
+		bastiodon.setDefense(95);
+		bastiodon.setGeneration(4);
+		bastiodon.setLegend(false);
+		addPokemon(bastiodon);
+		
+		Pokemon umbreon =new Pokemon();
+		umbreon.setName("Espeon");
+		umbreon.setType1("Dark");
+		umbreon.setType2(null);
+		umbreon.setHp(40);
+		umbreon.setAttack(60);
+		umbreon.setDefense(40);
+		umbreon.setGeneration(2);
+		umbreon.setLegend(false);
+		addPokemon(umbreon);
+		
+		Pokemon banette =new Pokemon();
+		banette.setName("Banette");
+		banette.setType1("Ghost");
+		banette.setType2(null);
+		banette.setHp(40);
+		banette.setAttack(65);
+		banette.setDefense(30);
+		banette.setGeneration(3);
+		banette.setLegend(false);
+		addPokemon(banette);
+		
+		Pokemon porygon =new Pokemon();
+		porygon.setName("Porygon");
+		porygon.setType1("Normal");
+		porygon.setType2(null);
+		porygon.setHp(60);
+		porygon.setAttack(20);
+		porygon.setDefense(60);
+		porygon.setGeneration(1);
+		porygon.setLegend(false);
+		addPokemon(porygon);
+		
+		Pokemon magnezone =new Pokemon();
+		magnezone.setName("Magnezone");
+		magnezone.setType1("Electric");
+		magnezone.setType2("Steel");
+		magnezone.setHp(70);
+		magnezone.setAttack(55);
+		magnezone.setDefense(90);
+		magnezone.setGeneration(4);
+		magnezone.setLegend(false);
+		addPokemon(magnezone);
+		
+		Pokemon registeel =new Pokemon();
+		registeel.setName("Registeel");
+		registeel.setType1("Steel");
+		registeel.setType2(null);
+		registeel.setHp(50);
+		registeel.setAttack(30);
+		registeel.setDefense(80);
+		registeel.setGeneration(2);
+		registeel.setLegend(true);
+		addPokemon(registeel);
 		
 		// Create trainers
 		Trainer red=new Trainer();
@@ -67,17 +265,86 @@ public class MapTrainerRepository implements TrainerRepository{
 		blue.setGender("Male");
 		addTrainer(blue);
 		
+		Trainer JJ=new Trainer();
+		JJ.setName("JJ");
+		JJ.setAge(45);
+		JJ.setGender("Male");
+		addTrainer(JJ);
+		
+		Trainer mariano=new Trainer();
+		mariano.setName("Mariano R.");
+		mariano.setAge(69);
+		mariano.setGender("Male");
+		addTrainer(mariano);
+		
+		Trainer manue=new Trainer();
+		manue.setName("Prof. Manuel");
+		manue.setAge(52);
+		manue.setGender("Male");
+		addTrainer(manue);
+
+		Trainer edgelord=new Trainer();
+		edgelord.setName("Edge Lord");
+		edgelord.setAge(14);
+		edgelord.setGender("Male");
+		addTrainer(edgelord);
+
+		Trainer joselin=new Trainer();
+		joselin.setName("Joselin");
+		joselin.setAge(6);
+		joselin.setGender("Male");
+		addTrainer(joselin);
+
+		Trainer josefina=new Trainer();
+		josefina.setName("Josefina");
+		josefina.setAge(98);
+		josefina.setGender("Female");
+		addTrainer(josefina);
+		
+		Trainer leaf = new Trainer();
+		leaf.setName("Leaf");
+		leaf.setAge(18);
+		leaf.setGender("Female");
+		addTrainer(leaf);
+		
+		Trainer brendan = new Trainer();
+		brendan.setName("Brendan");
+		brendan.setAge(17);
+		brendan.setGender("Male");
+		addTrainer(brendan);
+		
 		// Add pokemons to trainers
 		addPokemon(red.getId(), pikachu.getId());
 		addPokemon(red.getId(), mew.getId());
 		addPokemon(blue.getId(), pikachu.getId());
+		addPokemon(mariano.getId(), wingull.getId());
+		addPokemon(mariano.getId(), pelipper.getId());
+		addPokemon(mariano.getId(), wingull.getId());
+		addPokemon(manue.getId(), porygon.getId());
+		addPokemon(edgelord.getId(), banette.getId());
+		addPokemon(edgelord.getId(), umbreon.getId());
+		addPokemon(edgelord.getId(), sharpedo.getId());
+		addPokemon(JJ.getId(), magnezone.getId());
+		addPokemon(JJ.getId(), registeel.getId());
+		addPokemon(joselin.getId(), venosaur.getId());
+		addPokemon(joselin.getId(), bastiodon.getId());
+		addPokemon(joselin.getId(), groudon.getId());
+		addPokemon(josefina.getId(), beedrill.getId());
+		addPokemon(josefina.getId(), charizard.getId());
+		addPokemon(leaf.getId(), venosaur.getId());
+		addPokemon(leaf.getId(), pelipper.getId());
+		addPokemon(leaf.getId(), registeel.getId());
+		addPokemon(leaf.getId(), sharpedo.getId());
+		addPokemon(leaf.getId(), charizard.getId());
+		addPokemon(leaf.getId(), charizard.getId());
+		
 
 	}
 	
 	// Trainer related operations
 			@Override
 			public void addTrainer(Trainer t) {
-		        String id = "t" + index++;
+		        String id = "t" + indexT++;
 		        t.setId(id);
 		        trainerMap.put(id,t);
 		    }
@@ -124,7 +391,7 @@ public class MapTrainerRepository implements TrainerRepository{
 			
 			@Override
 			public void addPokemon(Pokemon p) {
-				String id = "s" + index++;
+				String id = "p" + indexP++;
 				p.setId(id);
 				pokemonMap.put(id, p);
 			}
