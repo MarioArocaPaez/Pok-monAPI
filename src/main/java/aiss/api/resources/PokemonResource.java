@@ -24,7 +24,8 @@ import aiss.model.repository.MapTrainerRepository;
 import aiss.model.repository.TrainerRepository;
 
 import java.net.URI;
-import java.util.Collection;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 
@@ -49,19 +50,21 @@ public class PokemonResource {
 	@Produces("application/json")
 	public Collection<Pokemon> getAll()
 	{
-		return repository.getAllPokemons();
+		Collection<Pokemon> res = repository.getAllPokemons().stream()
+				.sorted(Comparator.comparing(Pokemon::getName)).collect(Collectors.toList());
+		return res;
 	}
 	
 	
 	@GET
-	@Path("/{id}")
+	@Path("/{name}")
 	@Produces("application/json")
-	public Pokemon get(@PathParam("id") String pokemonId)
+	public Pokemon get(@PathParam("name") String pokemonName)
 	{
-		Pokemon poke = repository.getPokemon(pokemonId);
+		Pokemon poke = repository.getPokemon(pokemonName);
 		
 		if (poke == null) {
-			throw new NotFoundException("The Pokémon with id="+ pokemonId +" was not found");			
+			throw new NotFoundException("The Pokémon " + pokemonName +" was not found");			
 		}
 		
 		return poke;
@@ -73,12 +76,20 @@ public class PokemonResource {
 	public Response addPokemon(@Context UriInfo uriInfo, Pokemon poke) {
 		if (poke.getName() == null || "".equals(poke.getName()))
 			throw new BadRequestException("The name of the Pokémon must not be null");
+		if (poke.getType1() == null || "".equals(poke.getType1()))
+			throw new BadRequestException("The first type of the Pokémon must not be null");
+		if (poke.getHp() == null)
+			throw new BadRequestException("The Health Points of the Pokémon must not be null");
+		if (poke.getAttack() == null)
+			throw new BadRequestException("The Attack of the Pokémon must not be null");
+		if (poke.getDefense() == null)
+			throw new BadRequestException("The Defense of the Pokémon must not be null");
 
 		repository.addPokemon(poke);
 
 		// Builds the response. Returns the song the has just been added.
 		UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
-		URI uri = ub.build(poke.getId());
+		URI uri = ub.build(poke.getName());
 		ResponseBuilder resp = Response.created(uri);
 		resp.entity(poke);			
 		return resp.build();
@@ -88,9 +99,9 @@ public class PokemonResource {
 	@PUT
 	@Consumes("application/json")
 	public Response updatePokemon(Pokemon poke) {
-		Pokemon oldpoke = repository.getPokemon(poke.getId());
+		Pokemon oldpoke = repository.getPokemon(poke.getName());
 		if (oldpoke == null) {
-			throw new NotFoundException("The pokemon with id="+ poke.getId() +" was not found");			
+			throw new NotFoundException("The Pokémon " + poke.getName() +" was not found");			
 		}
 
 		// Update name
@@ -117,16 +128,16 @@ public class PokemonResource {
 	}
 	
 	@DELETE
-	@Path("/{id}")
-	public Response removePokemon(@PathParam("id") String pokeId) {
-		Pokemon toberemoved=repository.getPokemon(pokeId);
+	@Path("/{name}")
+	public Response removePokemon(@PathParam("name") String pokemonName) {
+		Pokemon toberemoved=repository.getPokemon(pokemonName);
 		if (toberemoved == null)
-			throw new NotFoundException("The pokemon with id="+ pokeId +" was not found");
+			throw new NotFoundException("The Pokémon " + pokemonName +" was not found");
 		else
-			repository.deletePokemon(pokeId);
+			repository.deletePokemon(pokemonName);
 		
 			for(Trainer a: repository.getAllTrainers()) {
-				repository.removePokemon(a.getId(), pokeId);
+				repository.removePokemon(a.getId(), pokemonName);
 			}
 		return Response.noContent().build();
 	}

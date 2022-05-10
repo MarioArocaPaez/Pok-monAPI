@@ -2,7 +2,6 @@ package aiss.model;
 
 public class Pokemon {
 
-	private String id;
 	private String name;
 	private String type1;
 	private String type2;
@@ -13,19 +12,6 @@ public class Pokemon {
 	private Boolean legend;
 
 	public Pokemon() {
-	}
-
-	public Pokemon(String id, String name, String type1, String type2, Integer hp, Integer attack, Integer defense,
-			Integer generation, Boolean legend) {
-		this.id = id;
-		this.name = name;
-		this.type1 = type1;
-		this.type2 = type2;
-		this.hp = hp;
-		this.attack = attack;
-		this.defense = defense;
-		this.generation = generation;
-		this.legend = legend;
 	}
 
 	public Pokemon(String name, String type1, String type2, Integer hp, Integer attack, Integer defense,
@@ -40,13 +26,6 @@ public class Pokemon {
 		this.legend = legend;
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;

@@ -65,13 +65,13 @@ public class Trainer {
     this.pokemons = pokemons;
     }
     
-	public Pokemon getPokemon(String id) {
+	public Pokemon getPokemon(String nameP) {
 		if (pokemons==null)
 			return null;
 		
 		Pokemon poke =null;
 		for(Pokemon p: pokemons)
-			if (p.getId().equals(id))
+			if (p.getName().equals(nameP))
 			{
 				poke=p;
 				break;
@@ -90,8 +90,8 @@ public class Trainer {
 		pokemons.remove(p);
 	}
 	
-	public void deletePokemon(String id) {
-		Pokemon p = getPokemon(id);
+	public void deletePokemon(String nameP) {
+		Pokemon p = getPokemon(nameP);
 		if (p!=null)
 			pokemons.remove(p);
 	}

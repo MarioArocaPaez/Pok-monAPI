@@ -94,12 +94,12 @@ public class TrainerResource {
         if (trainer.getName() == null || "".equals(trainer.getName()))
             throw new BadRequestException("The name of the Trainer must not be null");
         
-        List<String> everyPokemonsId = repository.getAllPokemons().stream().map(x->x.getId()).collect(Collectors.toList());
+        List<String> everyPokemonsId = repository.getAllPokemons().stream().map(x->x.getName()).collect(Collectors.toList());
         List<Pokemon> listpoke = new ArrayList<>();
         
         for (Pokemon pkmn : trainer.getPokemons()) {
-            if (everyPokemonsId.contains(pkmn.getId())) {
-                pkmn = repository.getPokemon(pkmn.getId());
+            if (everyPokemonsId.contains(pkmn.getName())) {
+                pkmn = repository.getPokemon(pkmn.getName());
                 listpoke.add(pkmn);
             }
         }
@@ -123,12 +123,12 @@ public class TrainerResource {
             throw new NotFoundException("The Trainer with id="+ trainer.getId() +" was not found");            
         }
         
-        List<String> everyPokemonsId = repository.getAllPokemons().stream().map(x->x.getId()).collect(Collectors.toList());
+        List<String> everyPokemonsId = repository.getAllPokemons().stream().map(x->x.getName()).collect(Collectors.toList());
         List<Pokemon> listpoke = new ArrayList<>();
         
         for (Pokemon pkmn : trainer.getPokemons()) {
-            if (everyPokemonsId.contains(pkmn.getId())) {
-                pkmn = repository.getPokemon(pkmn.getId());
+            if (everyPokemonsId.contains(pkmn.getName())) {
+                pkmn = repository.getPokemon(pkmn.getName());
                 listpoke.add(pkmn);
             }
         }
@@ -169,22 +169,22 @@ public class TrainerResource {
 	
 	
 	@POST	
-	@Path("/{trainerId}/{pokemonId}")
+	@Path("/{trainerId}/{pokemonName}")
 	@Consumes("text/plain")
 	@Produces("application/json")
-	public Response addPokemon(@Context UriInfo uriInfo,@PathParam("trainerId") String trainerId, @PathParam("pokemonId") String pokemonId)
+	public Response addPokemon(@Context UriInfo uriInfo,@PathParam("trainerId") String trainerId, @PathParam("pokemonName") String pokemonName)
 	{				
 		
 		Trainer tr = repository.getTrainer(trainerId);
-		Pokemon pkmn = repository.getPokemon(pokemonId);
+		Pokemon pkmn = repository.getPokemon(pokemonName);
 		
 		if (tr==null)
 			throw new NotFoundException("The Trainer with id=" + trainerId + " was not found");
 		
 		if (pkmn == null)
-			throw new NotFoundException("The Pokemon with id=" + pokemonId + " was not found");
+			throw new NotFoundException("The Pokemon with name=" + pokemonName + " was not found");
 			
-		repository.addPokemon(trainerId, pokemonId);		
+		repository.addPokemon(trainerId, pokemonName);		
 
 		// Builds the response
 		UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
@@ -196,19 +196,19 @@ public class TrainerResource {
 	
 	
 	@DELETE
-	@Path("/{trainerId}/{pokemonId}")
-	public Response removePokemon(@PathParam("trainerId") String trainerId, @PathParam("pokemonId") String pokemonId) {
+	@Path("/{trainerId}/{pokemonName}")
+	public Response removePokemon(@PathParam("trainerId") String trainerId, @PathParam("pokemonName") String pokemonName) {
 		Trainer trainer = repository.getTrainer(trainerId);
-		Pokemon pokemon = repository.getPokemon(pokemonId);
+		Pokemon pokemon = repository.getPokemon(pokemonName);
 		
 		if (trainer==null)
 			throw new NotFoundException("The Trainer with id=" + trainerId + " was not found");
 		
 		if (pokemon == null)
-			throw new NotFoundException("The Pokemon with id=" + pokemonId + " was not found");
+			throw new NotFoundException("The Pokemon with name=" + pokemonName + " was not found");
 		
 		
-		repository.removePokemon(trainerId, pokemonId);		
+		repository.removePokemon(trainerId, pokemonName);		
 		
 		return Response.noContent().build();
 	}

@@ -14,7 +14,6 @@ public class MapTrainerRepository implements TrainerRepository{
 	Map<String, Pokemon> pokemonMap;
 	private static MapTrainerRepository instance=null;
 	private int indexT=0;			
-	private int indexP=0;
 	
 	
 	public static MapTrainerRepository getInstance() {
@@ -314,29 +313,29 @@ public class MapTrainerRepository implements TrainerRepository{
 		addTrainer(brendan);
 		
 		// Add pokemons to trainers
-		addPokemon(red.getId(), pikachu.getId());
-		addPokemon(red.getId(), mew.getId());
-		addPokemon(blue.getId(), pikachu.getId());
-		addPokemon(mariano.getId(), wingull.getId());
-		addPokemon(mariano.getId(), pelipper.getId());
-		addPokemon(mariano.getId(), wingull.getId());
-		addPokemon(manue.getId(), porygon.getId());
-		addPokemon(edgelord.getId(), banette.getId());
-		addPokemon(edgelord.getId(), umbreon.getId());
-		addPokemon(edgelord.getId(), sharpedo.getId());
-		addPokemon(JJ.getId(), magnezone.getId());
-		addPokemon(JJ.getId(), registeel.getId());
-		addPokemon(joselin.getId(), venosaur.getId());
-		addPokemon(joselin.getId(), bastiodon.getId());
-		addPokemon(joselin.getId(), groudon.getId());
-		addPokemon(josefina.getId(), beedrill.getId());
-		addPokemon(josefina.getId(), charizard.getId());
-		addPokemon(leaf.getId(), venosaur.getId());
-		addPokemon(leaf.getId(), pelipper.getId());
-		addPokemon(leaf.getId(), registeel.getId());
-		addPokemon(leaf.getId(), sharpedo.getId());
-		addPokemon(leaf.getId(), charizard.getId());
-		addPokemon(leaf.getId(), charizard.getId());
+		addPokemon(red.getId(), pikachu.getName());
+		addPokemon(red.getId(), mew.getName());
+		addPokemon(blue.getId(), pikachu.getName());
+		addPokemon(mariano.getId(), wingull.getName());
+		addPokemon(mariano.getId(), pelipper.getName());
+		addPokemon(mariano.getId(), wingull.getName());
+		addPokemon(manue.getId(), porygon.getName());
+		addPokemon(edgelord.getId(), banette.getName());
+		addPokemon(edgelord.getId(), umbreon.getName());
+		addPokemon(edgelord.getId(), sharpedo.getName());
+		addPokemon(JJ.getId(), magnezone.getName());
+		addPokemon(JJ.getId(), registeel.getName());
+		addPokemon(joselin.getId(), venosaur.getName());
+		addPokemon(joselin.getId(), bastiodon.getName());
+		addPokemon(joselin.getId(), groudon.getName());
+		addPokemon(josefina.getId(), beedrill.getName());
+		addPokemon(josefina.getId(), charizard.getName());
+		addPokemon(leaf.getId(), venosaur.getName());
+		addPokemon(leaf.getId(), pelipper.getName());
+		addPokemon(leaf.getId(), registeel.getName());
+		addPokemon(leaf.getId(), sharpedo.getName());
+		addPokemon(leaf.getId(), charizard.getName());
+		addPokemon(leaf.getId(), charizard.getName());
 		
 
 	}
@@ -391,9 +390,7 @@ public class MapTrainerRepository implements TrainerRepository{
 			
 			@Override
 			public void addPokemon(Pokemon p) {
-				String id = "p" + indexP++;
-				p.setId(id);
-				pokemonMap.put(id, p);
+				pokemonMap.put(p.getName(), p);
 			}
 			
 			@Override
@@ -409,8 +406,7 @@ public class MapTrainerRepository implements TrainerRepository{
 			@Override
 			public void updatePokemon(Pokemon p) {
 				
-				Pokemon pkmn = pokemonMap.get(p.getId());
-				pkmn.setName(p.getName());
+				Pokemon pkmn = pokemonMap.get(p.getName());
 				pkmn.setType1(p.getType1());
 				pkmn.setType2(p.getType2());
 				pkmn.setHp(p.getHp());
