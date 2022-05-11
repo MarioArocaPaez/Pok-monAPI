@@ -7,6 +7,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -48,11 +49,92 @@ public class PokemonResource {
 	
 	@GET
 	@Produces("application/json")
-	public Collection<Pokemon> getAll()
+	public Collection<Pokemon> getAll(@QueryParam("areLegendaries") Boolean areLegendaries, @QueryParam("substring") String substring, @QueryParam("order") String order, 
+			@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit)
 	{
-		Collection<Pokemon> res = repository.getAllPokemons().stream()
-				.sorted(Comparator.comparing(Pokemon::getName)).collect(Collectors.toList());
-		return res;
+		
+		List<Pokemon> result = new ArrayList<Pokemon>();
+		
+		// Filter
+		for (Pokemon pkmn: repository.getAllPokemons()) {
+			if (areLegendaries == null
+					|| (areLegendaries && (pkmn.getLegend() == true))
+					|| (!areLegendaries && (pkmn.getLegend() == false))) {
+				
+				if (substring == null || pkmn.getName().contains(substring)) {
+					result.add(pkmn);
+				}	
+			}
+		}
+		
+		// Order
+		if(order != null) {
+			if (order.equals("name")) {
+				Collections.sort(result, (p1,p2) -> p1.getName().compareTo(p2.getName()));
+			} else if (order.equals("-name")) {
+				Collections.sort(result, (p1,p2) -> p2.getName().compareTo(p1.getName()));
+			} else if (order.equals("type1")) {
+				Collections.sort(result, (p1,p2) -> p1.getType1().compareTo(p2.getType1()));
+			} else if (order.equals("-type1")) {
+				Collections.sort(result, (p1,p2) -> p2.getType1().compareTo(p1.getType1()));
+			} else if (order.equals("type2")) {
+				List<Pokemon> nullList = result.stream().filter(x->x.getType2()==null).collect(Collectors.toList());
+				List<Pokemon> noNullList = result.stream().filter(x->x.getType2()!=null).collect(Collectors.toList());
+				Collections.sort(noNullList, (p1,p2) -> p1.getType2().compareTo(p2.getType2()));
+				for (Pokemon pkmn: nullList) {
+					noNullList.add(pkmn);
+				}
+				result=noNullList;
+			} else if (order.equals("-type2")) {
+				List<Pokemon> nullList = result.stream().filter(x->x.getType2()==null).collect(Collectors.toList());
+				List<Pokemon> noNullList = result.stream().filter(x->x.getType2()!=null).collect(Collectors.toList());
+				Collections.sort(noNullList, (p1,p2) -> p2.getType2().compareTo(p1.getType2()));
+				for (Pokemon pkmn: nullList) {
+					noNullList.add(pkmn);
+				}
+				result=noNullList;
+			} else if (order.equals("hp")) {
+				Collections.sort(result, (p1,p2) -> p1.getHp().compareTo(p2.getHp()));
+			} else if (order.equals("-hp")) {
+				Collections.sort(result, (p1,p2) -> p2.getHp().compareTo(p1.getHp()));
+			} else if (order.equals("attack")) {
+				Collections.sort(result, (p1,p2) -> p1.getAttack().compareTo(p2.getAttack()));
+			} else if (order.equals("-attack")) {
+				Collections.sort(result, (p1,p2) -> p2.getAttack().compareTo(p1.getAttack()));
+			} else if (order.equals("defense")) {
+				Collections.sort(result, (p1,p2) -> p1.getDefense().compareTo(p2.getDefense()));
+			} else if (order.equals("-defense")) {
+				Collections.sort(result, (p1,p2) -> p2.getDefense().compareTo(p1.getDefense()));
+			} else if (order.equals("generation")) {
+				Collections.sort(result, (p1,p2) -> p1.getGeneration().compareTo(p2.getGeneration()));
+			} else if (order.equals("-generation")) {
+				Collections.sort(result, (p1,p2) -> p2.getGeneration().compareTo(p1.getGeneration()));
+			} else {
+				throw new BadRequestException("The order parameter must be 'name', '-name', 'type1', '-type1', 'type2', '-type2', 'hp', '-hp', 'attack', '-attack', 'defense', '-defense', 'generation', '-generation'.");
+			}
+		}
+		
+		// Offset
+		if (offset != null) {
+			if (offset <= result.size()) {
+				result.subList(0, offset).clear();
+			} else {
+				Integer value = result.size()+1;
+				throw new BadRequestException("Offset value has to be less than "+value+".");
+			}
+		}
+		
+		//Limit
+		if (limit != null) {
+			if (limit <= result.size()) {
+				result = result.subList(0, limit);
+			} else {
+				Integer value = result.size()+1;
+				throw new BadRequestException("Limit value has to be less than "+value+".");
+			}
+		}
+		
+		return result;
 	}
 	
 	
