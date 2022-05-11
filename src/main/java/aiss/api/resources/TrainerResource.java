@@ -3,6 +3,7 @@ package aiss.api.resources;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.List;
 
@@ -56,20 +57,120 @@ public class TrainerResource {
 
 	@GET
 	@Produces("application/json")
-	public Collection<Trainer> getAll(@QueryParam("name") String name, @QueryParam("isEmpty") Boolean isEmpty)
+	public Collection<Trainer> getAll(@QueryParam("noPokemons") Boolean noPokemons, @QueryParam("substring") String substring, @QueryParam("order") String order,
+			@QueryParam("orderPokemons") String orderPokemons, @QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit)
 	{
-		List<Trainer> retrurnedTrainer = new ArrayList<>();
+	
+		List<Trainer> result = new ArrayList<Trainer>();
 		
-		for(Trainer t: repository.getAllTrainers()) {
-			if(name == null || t.getName().equals(name)) {
-				if(isEmpty == null ||
-						(isEmpty && t.getPokemons() == null || t.getPokemons().size() == 0) ||
-						isEmpty && t.getPokemons() != null && t.getPokemons().size() == 0) {
-					retrurnedTrainer.add(t);
+		// Filter
+		for (Trainer trainer: repository.getAllTrainers()) {
+			if (noPokemons == null
+					|| (noPokemons && trainer.getPokemons() == null)
+					|| (!noPokemons && trainer.getPokemons() != null)) {
+				
+				if (substring == null || trainer.getName().contains(substring)) {
+					result.add(trainer);
+				}	
+			}
+		}
+		
+		// Order
+
+		if(order != null) {
+			if (order.equals("name")) {
+				Collections.sort(result, (p1,p2) -> p1.getName().compareTo(p2.getName()));
+			} else if (order.equals("-name")) {
+				Collections.sort(result, (p1,p2) -> p2.getName().compareTo(p1.getName()));
+			} else if (order.equals("age")) {
+				Collections.sort(result, (p1,p2) -> p1.getAge().compareTo(p2.getAge()));
+			} else if (order.equals("-age")) {
+				Collections.sort(result, (p1,p2) -> p2.getAge().compareTo(p1.getAge()));
+			} else if (order.equals("gender")) {
+				Collections.sort(result, (p1,p2) -> p1.getGender().compareTo(p2.getGender()));
+			} else if (order.equals("-gender")) {
+				Collections.sort(result, (p1,p2) -> p2.getGender().compareTo(p1.getGender()));
+			} else {
+				throw new BadRequestException("The order parameter must be 'name', '-name', 'age', '-age', 'gender', '-gender'.");
+			}
+		}
+		
+		if(orderPokemons != null) {
+			for (Trainer trainer:result) {
+				if(trainer.getPokemons()!=null) {
+					List<Pokemon> pokemonsTrainer = trainer.getPokemons();
+					
+					if (orderPokemons.equals("name")) {
+						Collections.sort(pokemonsTrainer, (p1,p2) -> p1.getName().compareTo(p2.getName()));
+					} else if (orderPokemons.equals("-name")) {
+						Collections.sort(pokemonsTrainer, (p1,p2) -> p2.getName().compareTo(p1.getName()));
+					} else if (orderPokemons.equals("type1")) {
+						Collections.sort(pokemonsTrainer, (p1,p2) -> p1.getType1().compareTo(p2.getType1()));
+					} else if (orderPokemons.equals("-type1")) {
+						Collections.sort(pokemonsTrainer, (p1,p2) -> p2.getType1().compareTo(p1.getType1()));
+					} else if (orderPokemons.equals("type2")) {
+						List<Pokemon> nullList = pokemonsTrainer.stream().filter(x->x.getType2()==null).collect(Collectors.toList());
+						List<Pokemon> noNullList = pokemonsTrainer.stream().filter(x->x.getType2()!=null).collect(Collectors.toList());
+						Collections.sort(noNullList, (p1,p2) -> p1.getType2().compareTo(p2.getType2()));
+						for (Pokemon pkmn: nullList) {
+							noNullList.add(pkmn);
+						}
+						pokemonsTrainer=noNullList;
+					} else if (orderPokemons.equals("-type2")) {
+						List<Pokemon> nullList = pokemonsTrainer.stream().filter(x->x.getType2()==null).collect(Collectors.toList());
+						List<Pokemon> noNullList = pokemonsTrainer.stream().filter(x->x.getType2()!=null).collect(Collectors.toList());
+						Collections.sort(noNullList, (p1,p2) -> p2.getType2().compareTo(p1.getType2()));
+						for (Pokemon pkmn: nullList) {
+							noNullList.add(pkmn);
+						}
+						pokemonsTrainer=noNullList;
+					} else if (orderPokemons.equals("hp")) {
+						Collections.sort(pokemonsTrainer, (p1,p2) -> p1.getHp().compareTo(p2.getHp()));
+					} else if (orderPokemons.equals("-hp")) {
+						Collections.sort(pokemonsTrainer, (p1,p2) -> p2.getHp().compareTo(p1.getHp()));
+					} else if (orderPokemons.equals("attack")) {
+						Collections.sort(pokemonsTrainer, (p1,p2) -> p1.getAttack().compareTo(p2.getAttack()));
+					} else if (orderPokemons.equals("-attack")) {
+						Collections.sort(pokemonsTrainer, (p1,p2) -> p2.getAttack().compareTo(p1.getAttack()));
+					} else if (orderPokemons.equals("defense")) {
+						Collections.sort(pokemonsTrainer, (p1,p2) -> p1.getDefense().compareTo(p2.getDefense()));
+					} else if (orderPokemons.equals("-defense")) {
+						Collections.sort(pokemonsTrainer, (p1,p2) -> p2.getDefense().compareTo(p1.getDefense()));
+					} else if (orderPokemons.equals("generation")) {
+						Collections.sort(pokemonsTrainer, (p1,p2) -> p1.getGeneration().compareTo(p2.getGeneration()));
+					} else if (orderPokemons.equals("-generation")) {
+						Collections.sort(pokemonsTrainer, (p1,p2) -> p2.getGeneration().compareTo(p1.getGeneration()));
+					} else {
+						throw new BadRequestException("The orderPokemons parameter must be 'name', '-name', 'type1', '-type1', 'type2', '-type2', 'hp', '-hp', 'attack', '-attack', 'defense', '-defense', 'generation', '-generation'.");
+					}
+					
+					trainer.setPokemons(pokemonsTrainer);
 				}
 			}
 		}
-		return repository.getAllTrainers();
+		
+		
+		// Offset
+		if (offset != null) {
+			if (offset <= result.size()) {
+				result.subList(0, offset).clear();
+			} else {
+				Integer value = result.size()+1;
+				throw new BadRequestException("Offset value has to be less than "+value+".");
+			}
+		}
+		
+		//Limit
+		if (limit != null) {
+			if (limit <= result.size()) {
+				result = result.subList(0, limit);
+			} else {
+				Integer value = result.size()+1;
+				throw new BadRequestException("Limit value has to be less than "+value+".");
+			}
+		}
+		
+		return result;
 	}
 	
 	
