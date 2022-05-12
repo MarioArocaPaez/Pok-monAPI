@@ -103,9 +103,54 @@ public class BattleResource {
     @Consumes("application/json")
     @Produces("application/json")
     public Response addBattle(@Context UriInfo uriInfo, Battle battle) {
-        if (battle.getId() == null || "".equals(battle.getId()))
-            throw new BadRequestException("The id of the battle must not be null");
-       
+		
+		if(battle.getTr1()== battle.getTr2()) {
+			throw new BadRequestException("A battle cannot be of a trainer facing against themselves");
+		}
+		
+        List<String> everyTrainerId = repository.getAllTrainers().stream().map(x->x.getId())
+        		.collect(Collectors.toList());
+        if(everyTrainerId.contains(battle.getTr1().getId())) {
+        	battle.setTr1(repository.getTrainer(battle.getTr1().getId()));
+        } else {
+			throw new BadRequestException("The first trainer doesn't exist");
+        }
+        if(everyTrainerId.contains(battle.getTr2().getId())) {
+        	battle.setTr2(repository.getTrainer(battle.getTr2().getId()));
+        } else {
+			throw new BadRequestException("The second trainer doesn't exist");
+        }
+        
+        if (battle.getName() == null || "".equals(battle.getName())) {
+        	battle.setName(battle.getTr1().getName() + " VS " + battle.getTr2().getName());
+        }
+        
+        if (battle.getWinner() == null) {
+    		List<Integer> statstr1 = new ArrayList<>();
+    		List<Integer> statstr2 = new ArrayList<>();
+        	for(Pokemon p:battle.getTr1().getPokemons()) {
+        		statstr1.add(p.getAttack());
+        		statstr1.add(p.getDefense());
+        		statstr1.add(p.getHp());
+        	}
+        	for(Pokemon p:battle.getTr2().getPokemons()) {
+        		statstr2.add(p.getAttack());
+        		statstr2.add(p.getDefense());
+        		statstr2.add(p.getHp());
+        	}
+        	Integer sumtr1 = statstr1.stream().mapToInt(Integer::intValue).sum() 
+        			/ battle.getTr1().getPokemons().size();
+        	Integer sumtr2 = statstr2.stream().mapToInt(Integer::intValue).sum() 
+        			/ battle.getTr2().getPokemons().size();
+        	if(sumtr1>sumtr2) {
+        		battle.setWinner(battle.getTr1());
+        	} else if(sumtr2>sumtr1) {
+        		battle.setWinner(battle.getTr2());
+        	} else {
+        		battle.setWinner(null);
+        	}
+
+        }
         repository.addBattle(battle);
 
         // Builds the response. Returns the Trainer the has just been added.
