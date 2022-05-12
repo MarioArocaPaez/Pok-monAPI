@@ -67,11 +67,11 @@ public class PokemonResource {
 			}
 		}
 		
+		Collections.sort(result, (p1,p2) -> p1.getName().compareTo(p2.getName()));
+		
 		// Order
 		if(order != null) {
-			if (order.equals("name")) {
-				Collections.sort(result, (p1,p2) -> p1.getName().compareTo(p2.getName()));
-			} else if (order.equals("-name")) {
+			if (order.equals("-name")) {
 				Collections.sort(result, (p1,p2) -> p2.getName().compareTo(p1.getName()));
 			} else if (order.equals("type1")) {
 				Collections.sort(result, (p1,p2) -> p1.getType1().compareTo(p2.getType1()));
@@ -110,7 +110,7 @@ public class PokemonResource {
 			} else if (order.equals("-generation")) {
 				Collections.sort(result, (p1,p2) -> p2.getGeneration().compareTo(p1.getGeneration()));
 			} else {
-				throw new BadRequestException("The order parameter must be 'name', '-name', 'type1', '-type1', 'type2', '-type2', 'hp', '-hp', 'attack', '-attack', 'defense', '-defense', 'generation', '-generation'.");
+				throw new BadRequestException("The order parameter must be '-name', 'type1', '-type1', 'type2', '-type2', 'hp', '-hp', 'attack', '-attack', 'defense', '-defense', 'generation', '-generation'.");
 			}
 		}
 		

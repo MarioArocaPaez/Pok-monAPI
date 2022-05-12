@@ -1,6 +1,7 @@
 package aiss.api.resources;
 
 import java.net.URI;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -76,12 +77,12 @@ public class TrainerResource {
 			}
 		}
 		
+		Collections.sort(result, (p1,p2) -> p1.getName().compareTo(p2.getName()));
+		
 		// Order
 
 		if(order != null) {
-			if (order.equals("name")) {
-				Collections.sort(result, (p1,p2) -> p1.getName().compareTo(p2.getName()));
-			} else if (order.equals("-name")) {
+			if (order.equals("-name")) {
 				Collections.sort(result, (p1,p2) -> p2.getName().compareTo(p1.getName()));
 			} else if (order.equals("age")) {
 				Collections.sort(result, (p1,p2) -> p1.getAge().compareTo(p2.getAge()));
@@ -92,13 +93,14 @@ public class TrainerResource {
 			} else if (order.equals("-gender")) {
 				Collections.sort(result, (p1,p2) -> p2.getGender().compareTo(p1.getGender()));
 			} else {
-				throw new BadRequestException("The order parameter must be 'name', '-name', 'age', '-age', 'gender', '-gender'.");
+				throw new BadRequestException("The order parameter must be '-name', 'age', '-age', 'gender', '-gender'.");
 			}
 		}
 		
 		if(orderPokemons != null) {
 			for (Trainer trainer:result) {
 				if(trainer.getPokemons()!=null) {
+					
 					List<Pokemon> pokemonsTrainer = trainer.getPokemons();
 					
 					if (orderPokemons.equals("name")) {
