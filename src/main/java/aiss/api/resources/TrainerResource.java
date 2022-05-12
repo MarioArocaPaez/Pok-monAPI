@@ -28,6 +28,7 @@ import org.jboss.resteasy.spi.NotFoundException;
 import aiss.model.repository.TrainerRepository;
 import aiss.model.Trainer;
 import aiss.model.Pokemon;
+import aiss.model.Battle;
 import aiss.model.repository.MapTrainerRepository;
 
 

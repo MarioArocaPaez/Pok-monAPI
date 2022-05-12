@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.ws.rs.core.Application;
 import aiss.api.resources.TrainerResource;
 import aiss.api.resources.PokemonResource;
+import aiss.api.resources.BattleResource;
 
 
 public class GameFreakApplication extends Application {
@@ -18,6 +19,7 @@ public class GameFreakApplication extends Application {
 
 		singletons.add(TrainerResource.getInstance());
 		singletons.add(PokemonResource.getInstance());
+		singletons.add(BattleResource.getInstance());
 	}
 
 	@Override

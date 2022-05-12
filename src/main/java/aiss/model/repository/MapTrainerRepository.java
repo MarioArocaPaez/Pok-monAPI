@@ -6,15 +6,17 @@ import java.util.Map;
 
 import aiss.model.Pokemon;
 import aiss.model.Trainer;
+import aiss.model.Battle;
 
 
 public class MapTrainerRepository implements TrainerRepository{
 
 	Map<String, Trainer> trainerMap;
 	Map<String, Pokemon> pokemonMap;
+	Map<String, Battle> battleMap;
 	private static MapTrainerRepository instance=null;
 	private int indexT=0;			
-	
+	private int indexB=0;
 	
 	public static MapTrainerRepository getInstance() {
 		
@@ -30,6 +32,7 @@ public class MapTrainerRepository implements TrainerRepository{
 		
 		trainerMap = new HashMap<String,Trainer>();
 		pokemonMap = new HashMap<String,Pokemon>();
+		battleMap = new HashMap<String,Battle>();
 		
 		// Create pokemons
 		Pokemon pikachu=new Pokemon();
@@ -337,7 +340,12 @@ public class MapTrainerRepository implements TrainerRepository{
 		addPokemon(leaf.getId(), charizard.getName());
 		addPokemon(leaf.getId(), charizard.getName());
 		
-
+		// Create battle
+		Battle test = new Battle();
+		test.setTr1(joselin);
+		test.setTr2(josefina);
+		test.setWinner(joselin);
+		addBattle(test);
 	}
 	
 	// Trainer related operations
@@ -419,5 +427,20 @@ public class MapTrainerRepository implements TrainerRepository{
 			@Override
 			public void deletePokemon(String pokemonId) {
 				pokemonMap.remove(pokemonId);
+			}
+	// Battle related operations
+			
+			public void addBattle(Battle b) {
+				 String id = "b" + indexB++;
+			        b.setId(id);
+			        battleMap.put(id,b);
+			}
+			
+		    public Collection<Battle> getAllBattles(){
+				return battleMap.values();
+			}
+			
+		    public Battle getBattle(String BattleId) {
+				return battleMap.get(BattleId);
 			}
 }
