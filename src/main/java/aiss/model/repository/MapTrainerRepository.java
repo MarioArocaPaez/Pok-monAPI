@@ -503,7 +503,7 @@ public class MapTrainerRepository implements TrainerRepository{
 		    public Collection<Battle> getAllBattles(){
 				return battleMap.values();
 			}
-		    @Override
+			@Override
 		    public Battle getBattle(String BattleId) {
 				return battleMap.get(BattleId);
 			}
@@ -531,4 +531,24 @@ public class MapTrainerRepository implements TrainerRepository{
             public Gym getGym(String gymId) {
                 return gymMap.get(gymId);
             }
+            
+			public void deleteGym(String gymId) {
+				gymMap.remove(gymId);
+			}
+			
+			@Override
+			public void addHelper(String gymId, String helperId) {
+				Gym gym = getGym(gymId);
+				gym.addHelper(trainerMap.get(helperId));
+			}
+
+			@Override
+			public Collection<Trainer> getAllHelpers(String gymId) {
+				return getGym(gymId).getHelpers();
+			}
+
+			@Override
+			public void removeHelper(String gymId, String helperId) {
+				getGym(gymId).deleteHelper(getTrainer(helperId));
+			}
 }

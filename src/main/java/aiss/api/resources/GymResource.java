@@ -4,10 +4,13 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -22,6 +25,8 @@ import org.jboss.resteasy.spi.BadRequestException;
 import org.jboss.resteasy.spi.NotFoundException;
 
 import aiss.model.Gym;
+import aiss.model.Pokemon;
+import aiss.model.Trainer;
 import aiss.model.repository.MapTrainerRepository;
 import aiss.model.repository.TrainerRepository;
 
@@ -93,17 +98,115 @@ public class GymResource {
 	@POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addGym(@Context UriInfo uriInfo, Gym Gym) {
-        if (Gym.getId() == null || "".equals(Gym.getId()))
-            throw new BadRequestException("The id of the Gym must not be null");
+    public Response addGym(@Context UriInfo uriInfo, Gym gym) {
+        if (gym.getLeader() == null)
+            throw new BadRequestException("The leader of the Gym must not be null");
        
-        repository.addGym(Gym);
+        List<String> everyHelperId = repository.getAllTrainers().stream().map(x->x.getId())
+        		.collect(Collectors.toList());
+        List<Trainer> listhelper = new ArrayList<>();
+        
+        for (Trainer h : gym.getHelpers()) {
+            if (everyHelperId.contains(h.getId())) {
+                h = repository.getTrainer(h.getId());
+                listhelper.add(h);
+            }
+        }
+        if(everyHelperId.contains(gym.getLeader().getId())) {
+        	gym.setLeader(repository.getTrainer(gym.getLeader().getId()));
+        } else {
+            throw new BadRequestException("The id of the leader of the Gym doesn't exist");
+        }
+        gym.setHelpers(listhelper);
+        repository.addGym(gym);
 
         UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
-        URI uri = ub.build(Gym.getId());
+        URI uri = ub.build(gym.getId());
         ResponseBuilder resp = Response.created(uri);
-        resp.entity(Gym);            
+        resp.entity(gym);            
         return resp.build();
     }
 
+	
+    @PUT
+    @Consumes("application/json")
+    public Response updateGym(Gym gym) {
+    	Gym oldgym = repository.getGym(gym.getId());
+        if (oldgym == null) {
+            throw new NotFoundException("The Gym with id="+ gym.getId() +" was not found");            
+        }
+        
+        // Update type
+        if (gym.getType()!=null)
+            oldgym.setType(gym.getType());
+        
+        // Update helpers
+        if (gym.getHelpers()!=null)
+            oldgym.setHelpers(gym.getHelpers());
+        
+        // Update leader
+        if (gym.getLeader() != null) {
+            oldgym.setLeader(gym.getLeader());
+        }
+        
+        return Response.noContent().build();
+    }
+    
+	@DELETE
+	@Path("/{id}")
+	public Response removeGym(@PathParam("id") String id) {
+		Gym toberemoved = repository.getGym(id);
+		if (toberemoved == null)
+			throw new NotFoundException("The Gym with id="+ id +" was not found");
+		else
+			repository.deleteGym(id);
+		
+		return Response.noContent().build();
+	}
+	
+	@POST	
+	@Path("/{gymId}/{trainerId}")
+	@Consumes("text/plain")
+	@Produces("application/json")
+	public Response addHelper(@Context UriInfo uriInfo,@PathParam("gymId") String gymId, 
+			@PathParam("trainerId") String helperId)
+	{				
+		
+		Gym g = repository.getGym(gymId);
+		Trainer tr = repository.getTrainer(helperId);
+		
+		if (tr==null)
+			throw new NotFoundException("The Trainer with id=" + helperId + " was not found");
+		
+		if (g == null)
+			throw new NotFoundException("The Gym with id=" + gymId + " was not found");
+			
+		repository.addHelper(gymId, helperId);		
+
+		// Builds the response
+		UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
+		URI uri = ub.build(gymId);
+		ResponseBuilder resp = Response.created(uri);
+		resp.entity(g);			
+		return resp.build();
+	}
+	
+	@DELETE
+	@Path("/{gymId}/{trainerId}")
+	public Response removeHelper(@PathParam("gymId") String gymId, @PathParam("trainerId") String helperId) {
+		Gym g = repository.getGym(gymId);
+		Trainer tr = repository.getTrainer(helperId);
+		
+		if (tr==null)
+			throw new NotFoundException("The Trainer with id=" + helperId + " was not found");
+		
+		if (g == null)
+			throw new NotFoundException("The Gym with id=" + gymId + " was not found");
+		
+		
+		repository.removeHelper(gymId, helperId);		
+		
+		return Response.noContent().build();
+	}
+    
 }

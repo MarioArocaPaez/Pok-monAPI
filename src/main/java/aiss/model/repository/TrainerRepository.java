@@ -33,9 +33,14 @@ public interface TrainerRepository {
     public Battle getBattle(String BattleId);
     public void removeBattle(String BattleId);
     public void updateBattle(Battle b);
+    
     //Gyms
     public void addGym(Gym g);
     public Collection<Gym> getAllGyms();
     public Gym getGym(String GymId);
+	public void deleteGym(String gymId);
+	void addHelper(String gymId, String helperId);
+	Collection<Trainer> getAllHelpers(String gymId);
+	void removeHelper(String gymId, String helperId);
 
 }

@@ -1,5 +1,6 @@
 package aiss.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Gym {
@@ -57,6 +58,14 @@ public class Gym {
 		this.leader = leader;
 	}
 	
-
+	public void addHelper(Trainer t) {
+		if (helpers==null)
+			helpers = new ArrayList<Trainer>();
+		helpers.add(t);
+	}
+	
+	public void deleteHelper(Trainer t) {
+		helpers.remove(t);
+	}
 
 }
