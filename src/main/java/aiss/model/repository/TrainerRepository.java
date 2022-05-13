@@ -29,10 +29,10 @@ public interface TrainerRepository {
     
     //Battles
     public void addBattle(Battle b);
-   // public void calculateBattle(Battle b);
     public Collection<Battle> getAllBattles();
     public Battle getBattle(String BattleId);
-    
+    public void removeBattle(String BattleId);
+    public void updateBattle(Battle b);
     //Gyms
     public void addGym(Gym g);
     public Collection<Gym> getAllGyms();

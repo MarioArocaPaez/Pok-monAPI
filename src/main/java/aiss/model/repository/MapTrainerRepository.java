@@ -493,19 +493,27 @@ public class MapTrainerRepository implements TrainerRepository{
 				pokemonMap.remove(pokemonId);
 			}
 	// Battle related operations
-			
+			@Override
 			public void addBattle(Battle b) {
 				 String id = "b" + indexB++;
 			        b.setId(id);
 			        battleMap.put(id,b);
 			}
-			
+			@Override
 		    public Collection<Battle> getAllBattles(){
 				return battleMap.values();
 			}
-			
+		    @Override
 		    public Battle getBattle(String BattleId) {
 				return battleMap.get(BattleId);
+			}
+		    @Override
+		    public void removeBattle(String BattleId) {
+				battleMap.remove(BattleId);
+			}
+		    @Override
+		    public void updateBattle(Battle b) {
+				battleMap.put(b.getId(),b);
 			}
 		    
 	// Gym related operations

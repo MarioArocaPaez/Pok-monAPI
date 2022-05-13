@@ -160,4 +160,34 @@ public class BattleResource {
         resp.entity(battle);            
         return resp.build();
     }
+	
+	 @PUT
+	    @Consumes("application/json")
+	    public Response updateBattle(Battle battle) {
+	        Battle oldbattle = repository.getBattle(battle.getId());
+	        if (oldbattle == null) {
+	            throw new NotFoundException("The Battle with id="+ battle.getId() +" was not found");            
+	        }
+	        
+	        if (battle.getName() != null) {
+	        	oldbattle.setName(battle.getName());
+	        }
+			if (battle.getWinner() != null) {
+		     	oldbattle.setWinner(battle.getWinner());
+		    }
+	        return Response.noContent().build();
+	    }
+	 
+	@DELETE
+	@Path("/{battleId}")
+	public Response removeBattle(@PathParam("battleId") String battleId) {
+		Battle battle = repository.getBattle(battleId);
+		
+		if (battle==null)
+			throw new NotFoundException("The Battle with id=" + battleId + " was not found");
+		
+		repository.removeBattle(battleId);		
+		
+		return Response.noContent().build();
+	}
 }
