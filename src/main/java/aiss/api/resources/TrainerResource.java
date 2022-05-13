@@ -32,10 +32,6 @@ import aiss.model.Battle;
 import aiss.model.repository.MapTrainerRepository;
 
 
-
-
-
-
 @Path("/trainers")
 public class TrainerResource {
 	
@@ -206,6 +202,9 @@ public class TrainerResource {
                 listpoke.add(pkmn);
             }
         }
+        if(listpoke.size()>6) {
+            throw new BadRequestException("A team cannot have more than 6 Pokémon");
+        }
         trainer.setPokemons(listpoke);
         repository.addTrainer(trainer);
 
@@ -234,6 +233,9 @@ public class TrainerResource {
                 pkmn = repository.getPokemon(pkmn.getName());
                 listpoke.add(pkmn);
             }
+        }
+        if(listpoke.size()>6) {
+            throw new BadRequestException("A team cannot have more than 6 Pokémon");
         }
         trainer.setPokemons(listpoke);
         
@@ -286,6 +288,10 @@ public class TrainerResource {
 		
 		if (pkmn == null)
 			throw new NotFoundException("The Pokemon with name=" + pokemonName + " was not found");
+		
+		if(tr.getPokemons().size()>=6) {
+	        throw new BadRequestException("This team already has 6 Pokémon! You cannot add any more");
+		}
 			
 		repository.addPokemon(trainerId, pokemonName);		
 

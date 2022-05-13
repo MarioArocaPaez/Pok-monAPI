@@ -5,6 +5,7 @@ import java.util.Collection;
 import aiss.model.Pokemon;
 import aiss.model.Trainer;
 import aiss.model.Battle;
+import aiss.model.Gym;
 
 public interface TrainerRepository {
     
@@ -31,5 +32,10 @@ public interface TrainerRepository {
    // public void calculateBattle(Battle b);
     public Collection<Battle> getAllBattles();
     public Battle getBattle(String BattleId);
+    
+    //Gyms
+    public void addGym(Gym g);
+    public Collection<Gym> getAllGyms();
+    public Gym getGym(String GymId);
 
 }

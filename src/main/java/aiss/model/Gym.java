@@ -14,8 +14,12 @@ public class Gym {
 	}
 	
 	public Gym(String id, String type, List<Trainer> helpers, Trainer leader) {
-		super();
 		this.id = id;
+		this.type = type;
+		this.helpers = helpers;
+		this.leader = leader;
+	}
+	public Gym(String type, List<Trainer> helpers, Trainer leader) {
 		this.type = type;
 		this.helpers = helpers;
 		this.leader = leader;
@@ -53,9 +57,6 @@ public class Gym {
 		this.leader = leader;
 	}
 	
-	
-	
-	
-	
+
 
 }
