@@ -293,7 +293,7 @@ public class TrainerResource {
 	        throw new BadRequestException("This team already has 6 Pokémon! You cannot add any more");
 		}
 			
-		repository.addPokemon(trainerId, pokemonName);		
+		repository.addPokemonToTrainer(trainerId, pokemonName);		
 
 		// Builds the response
 		UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
