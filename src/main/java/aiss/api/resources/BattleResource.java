@@ -51,41 +51,103 @@ public class BattleResource {
 			_instance=new BattleResource();
 		return _instance; 
 	}
+	
 	@GET
 	@Produces("application/json")
-	public Collection<Battle> getAll( @QueryParam("order") String order,
+	public Collection<Battle> getAll(@QueryParam("winner") String winner, @QueryParam("order") String order,
 		 @QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit)
 	{
-	
+		
 		List<Battle> result = new ArrayList<Battle>();
 		
 		// Filter
 		for (Battle btl: repository.getAllBattles()) {
-			
-					result.add(btl);
-		}
-		// Offset
-				if (offset != null) {
-					if (offset <= result.size()) {
-						result.subList(0, offset).clear();
-					} else {
-						Integer value = result.size()+1;
-						throw new BadRequestException("Offset value has to be less than "+value+".");
-					}
-				}
-				
-				//Limit
-				if (limit != null) {
-					if (limit <= result.size()) {
-						result = result.subList(0, limit);
-					} else {
-						Integer value = result.size()+1;
-						throw new BadRequestException("Limit value has to be less than "+value+".");
-					}
-				}
-				
-				return result;
+			if (winner == null
+					|| (winner.equals("tr1") && btl.getWinner() == btl.getTr1())
+					|| (winner.equals("tr2") && btl.getWinner() == btl.getTr2())
+					|| (winner.equals("noWinner") && btl.getWinner() == null)) {
+						result.add(btl);
 			}
+			if (winner != null && !winner.equals("tr1") && !winner.equals("tr2") && !winner.equals("noWinner")){
+				throw new BadRequestException("The winner parameter must be'tr1', 'tr2', 'noWinner'.");
+			}
+		}
+		
+		Collections.sort(result, (p1,p2) -> p1.getId().compareTo(p2.getId()));
+		
+		// Order
+		if (order != null) {
+			if (order.equals("-id")) {
+				Collections.sort(result, (p1,p2) -> p2.getId().compareTo(p1.getId()));
+			} else if (order.equals("name")) {
+				List<Battle> nullList = result.stream().filter(x->x.getName()==null).collect(Collectors.toList());
+				List<Battle> noNullList = result.stream().filter(x->x.getName()!=null).collect(Collectors.toList());
+				Collections.sort(noNullList, (p1,p2) -> p1.getName().compareTo(p2.getName()));
+				for (Battle btl: nullList) {
+					noNullList.add(btl);
+				}
+				result=noNullList;
+			} else if (order.equals("-name")) {
+				List<Battle> nullList = result.stream().filter(x->x.getName()==null).collect(Collectors.toList());
+				List<Battle> noNullList = result.stream().filter(x->x.getName()!=null).collect(Collectors.toList());
+				Collections.sort(noNullList, (p1,p2) -> p2.getName().compareTo(p1.getName()));
+				for (Battle btl: nullList) {
+					noNullList.add(btl);
+				}
+				result=noNullList;
+			} else if (order.equals("tr1")) {
+				Collections.sort(result, (p1,p2) -> p1.getTr1().getName().compareTo(p2.getTr1().getName()));
+			} else if (order.equals("-tr1")) {
+				Collections.sort(result, (p1,p2) -> p2.getTr1().getName().compareTo(p1.getTr1().getName()));
+			} else if (order.equals("tr2")) {
+				Collections.sort(result, (p1,p2) -> p1.getTr2().getName().compareTo(p2.getTr2().getName()));
+			} else if (order.equals("-tr2")) {
+				Collections.sort(result, (p1,p2) -> p2.getTr2().getName().compareTo(p1.getTr2().getName()));
+			} else if (order.equals("winner")) {
+				List<Battle> nullList = result.stream().filter(x->x.getWinner()==null).collect(Collectors.toList());
+				List<Battle> noNullList = result.stream().filter(x->x.getWinner()!=null).collect(Collectors.toList());
+				Collections.sort(noNullList, (p1,p2) -> p1.getWinner().getName().compareTo(p2.getWinner().getName()));
+				for (Battle btl: nullList) {
+					noNullList.add(btl);
+				}
+				result=noNullList;
+			} else if (order.equals("-winner")) {
+				List<Battle> nullList = result.stream().filter(x->x.getWinner()==null).collect(Collectors.toList());
+				List<Battle> noNullList = result.stream().filter(x->x.getWinner()!=null).collect(Collectors.toList());
+				Collections.sort(noNullList, (p1,p2) -> p2.getWinner().getName().compareTo(p1.getWinner().getName()));
+				for (Battle btl: nullList) {
+					noNullList.add(btl);
+				}
+				result=noNullList;
+			} else {
+				throw new BadRequestException("The order parameter must be '-id', 'name', '-name', 'tr1', '-tr1', 'tr2', '-tr2', 'winner', '-winner'.");
+			}
+		}
+		
+		// Offset
+		if (offset != null) {
+			if (offset <= result.size()) {
+				result.subList(0, offset).clear();
+			} else {
+				Integer value = result.size()+1;
+				throw new BadRequestException("Offset value has to be less than "+value+".");
+			}
+		}
+		
+		//Limit
+		if (limit != null) {
+			if (limit <= result.size()) {
+				result = result.subList(0, limit);
+			} else {
+				Integer value = result.size()+1;
+				throw new BadRequestException("Limit value has to be less than "+value+".");
+			}
+		}
+		
+		return result;
+	}
+
+
 	@GET
 	@Path("/{id}")
 	@Produces("application/json")
@@ -190,3 +252,4 @@ public class BattleResource {
 		return Response.noContent().build();
 	}
 } 
+
