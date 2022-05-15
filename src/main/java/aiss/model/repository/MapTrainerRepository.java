@@ -322,29 +322,29 @@ public class MapTrainerRepository implements TrainerRepository{
 		addTrainer(brendan);
 		
 		// Add pokemons to trainers
-		addPokemon(red.getId(), pikachu.getName());
-		addPokemon(red.getId(), mew.getName());
-		addPokemon(blue.getId(), pikachu.getName());
-		addPokemon(mariano.getId(), wingull.getName());
-		addPokemon(mariano.getId(), pelipper.getName());
-		addPokemon(mariano.getId(), wingull.getName());
-		addPokemon(manue.getId(), porygon.getName());
-		addPokemon(edgelord.getId(), banette.getName());
-		addPokemon(edgelord.getId(), umbreon.getName());
-		addPokemon(edgelord.getId(), sharpedo.getName());
-		addPokemon(JJ.getId(), magnezone.getName());
-		addPokemon(JJ.getId(), registeel.getName());
-		addPokemon(joselin.getId(), venosaur.getName());
-		addPokemon(joselin.getId(), bastiodon.getName());
-		addPokemon(joselin.getId(), groudon.getName());
-		addPokemon(josefina.getId(), beedrill.getName());
-		addPokemon(josefina.getId(), charizard.getName());
-		addPokemon(leaf.getId(), venosaur.getName());
-		addPokemon(leaf.getId(), pelipper.getName());
-		addPokemon(leaf.getId(), registeel.getName());
-		addPokemon(leaf.getId(), sharpedo.getName());
-		addPokemon(leaf.getId(), charizard.getName());
-		addPokemon(leaf.getId(), charizard.getName());
+		addPokemonToTrainer(red.getId(), pikachu.getName());
+		addPokemonToTrainer(red.getId(), mew.getName());
+		addPokemonToTrainer(blue.getId(), pikachu.getName());
+		addPokemonToTrainer(mariano.getId(), wingull.getName());
+		addPokemonToTrainer(mariano.getId(), pelipper.getName());
+		addPokemonToTrainer(mariano.getId(), wingull.getName());
+		addPokemonToTrainer(manue.getId(), porygon.getName());
+		addPokemonToTrainer(edgelord.getId(), banette.getName());
+		addPokemonToTrainer(edgelord.getId(), umbreon.getName());
+		addPokemonToTrainer(edgelord.getId(), sharpedo.getName());
+		addPokemonToTrainer(JJ.getId(), magnezone.getName());
+		addPokemonToTrainer(JJ.getId(), registeel.getName());
+		addPokemonToTrainer(joselin.getId(), venosaur.getName());
+		addPokemonToTrainer(joselin.getId(), bastiodon.getName());
+		addPokemonToTrainer(joselin.getId(), groudon.getName());
+		addPokemonToTrainer(josefina.getId(), beedrill.getName());
+		addPokemonToTrainer(josefina.getId(), charizard.getName());
+		addPokemonToTrainer(leaf.getId(), venosaur.getName());
+		addPokemonToTrainer(leaf.getId(), pelipper.getName());
+		addPokemonToTrainer(leaf.getId(), registeel.getName());
+		addPokemonToTrainer(leaf.getId(), sharpedo.getName());
+		addPokemonToTrainer(leaf.getId(), charizard.getName());
+		addPokemonToTrainer(leaf.getId(), charizard.getName());
 		
 		// Create battle
 		Battle test = new Battle();
