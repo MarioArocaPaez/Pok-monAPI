@@ -3,6 +3,7 @@ package aiss.api.resources;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,6 +48,7 @@ public class GymResource {
 			_instance=new GymResource();
 		return _instance; 
 	}
+	
 	@GET
 	@Produces("application/json")
 	public Collection<Gym> getAll( @QueryParam("order") String order,
@@ -57,31 +59,51 @@ public class GymResource {
 		
 		// Filter
 		for (Gym btl: repository.getAllGyms()) {
-			
 					result.add(btl);
 		}
-		// Offset
-				if (offset != null) {
-					if (offset <= result.size()) {
-						result.subList(0, offset).clear();
-					} else {
-						Integer value = result.size()+1;
-						throw new BadRequestException("Offset value has to be less than "+value+".");
-					}
-				}
-				
-				//Limit
-				if (limit != null) {
-					if (limit <= result.size()) {
-						result = result.subList(0, limit);
-					} else {
-						Integer value = result.size()+1;
-						throw new BadRequestException("Limit value has to be less than "+value+".");
-					}
-				}
-				
-				return result;
+		
+		Collections.sort(result, (p1,p2) -> p1.getId().compareTo(p2.getId()));
+		
+		// Order
+		if (order != null) {
+			if (order.equals("-id")) {
+				Collections.sort(result, (p1,p2) -> p2.getId().compareTo(p1.getId()));
+			} else if (order.equals("type")) {
+				Collections.sort(result, (p1,p2) -> p1.getType().compareTo(p2.getType()));
+			} else if (order.equals("-type")) {
+				Collections.sort(result, (p1,p2) -> p2.getType().compareTo(p1.getType()));
+			} else if (order.equals("leader")) {
+				Collections.sort(result, (p1,p2) -> p1.getLeader().getName().compareTo(p2.getLeader().getName()));
+			} else if (order.equals("-leader")) {
+				Collections.sort(result, (p1,p2) -> p2.getLeader().getName().compareTo(p1.getLeader().getName()));
+			} else {
+				throw new BadRequestException("The order parameter must be '-id', 'type', '-type', 'leader', '-leader'.");
 			}
+		}	
+			
+		// Offset
+		if (offset != null) {
+			if (offset <= result.size()) {
+				result.subList(0, offset).clear();
+			} else {
+				Integer value = result.size()+1;
+				throw new BadRequestException("Offset value has to be less than "+value+".");
+			}
+		}
+		
+		//Limit
+		if (limit != null) {
+			if (limit <= result.size()) {
+				result = result.subList(0, limit);
+			} else {
+				Integer value = result.size()+1;
+				throw new BadRequestException("Limit value has to be less than "+value+".");
+			}
+		}
+		
+		return result;
+	}
+	
 	@GET
 	@Path("/{id}")
 	@Produces("application/json")
