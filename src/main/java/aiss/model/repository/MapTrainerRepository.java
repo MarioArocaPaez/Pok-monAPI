@@ -396,7 +396,7 @@ public class MapTrainerRepository implements TrainerRepository{
 			
 
 			@Override
-			public void addPokemon(String trainerId, String pokemonId) {
+			public void addPokemonToTrainer(String trainerId, String pokemonId) {
 				Trainer trainer = getTrainer(trainerId);
 				trainer.addPokemon(pokemonMap.get(pokemonId));
 			}
