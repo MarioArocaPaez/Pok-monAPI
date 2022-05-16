@@ -355,12 +355,12 @@ public class MapTrainerRepository implements TrainerRepository{
 		
 		//Create Gym
 		Gym testg = new Gym();
-		testg.setLeader(blue);
+		testg.setLeader(mariano);
 		List<Trainer> help = new ArrayList<>();
-		help.add(brendan);
 		help.add(josefina);
+		help.add(leaf);
 		testg.setHelpers(help);
-		testg.setType("Electric");
+		testg.setType("Flying");
 		addGym(testg);
 		
 		

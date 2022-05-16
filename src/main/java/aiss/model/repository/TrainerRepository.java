@@ -24,7 +24,7 @@ public interface TrainerRepository {
     public void updateTrainer(Trainer p);
     public void deleteTrainer(String TrainerId);
     public Collection<Pokemon> getAll(String TrainerId);
-    public void addPokemon(String TrainerId, String PokemonId);
+	public void addPokemonToTrainer(String trainerId, String pokemonName);
     public void removePokemon(String TrainerId, String PokemonId);
     
     //Battles

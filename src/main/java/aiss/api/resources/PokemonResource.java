@@ -48,24 +48,26 @@ public class PokemonResource {
 	}
 	
 	@GET
-	@Produces("application/json")
-	public Collection<Pokemon> getAll(@QueryParam("areLegendaries") Boolean areLegendaries, @QueryParam("substring") String substring, @QueryParam("order") String order, 
-			@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit)
-	{
-		
-		List<Pokemon> result = new ArrayList<Pokemon>();
-		
-		// Filter
-		for (Pokemon pkmn: repository.getAllPokemons()) {
-			if (areLegendaries == null
-					|| (areLegendaries && (pkmn.getLegend() == true))
-					|| (!areLegendaries && (pkmn.getLegend() == false))) {
-				
-				if (substring == null || pkmn.getName().contains(substring)) {
-					result.add(pkmn);
-				}	
-			}
-		}
+    @Produces("application/json")
+    public Collection<Pokemon> getAll(@QueryParam("type") String type,    @QueryParam("areLegendaries") Boolean areLegendaries, @QueryParam("substring") String substring, @QueryParam("order") String order, 
+            @QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit)
+    {
+        
+        List<Pokemon> result = new ArrayList<Pokemon>();
+        
+        // Filter legendary
+        for (Pokemon pkmn: repository.getAllPokemons()) {
+            if (areLegendaries == null
+                    || (areLegendaries && (pkmn.getLegend() == true))
+                    || (!areLegendaries && (pkmn.getLegend() == false))) {
+                
+                if (substring == null || pkmn.getName().contains(substring)) {
+                    if(pkmn.getType1().equals(type) || String.valueOf(pkmn.getType2()).equals(String.valueOf(type))  || type == null) {
+                    result.add(pkmn);
+                    }
+                }    
+            }
+        }
 		
 		Collections.sort(result, (p1,p2) -> p1.getName().compareTo(p2.getName()));
 		

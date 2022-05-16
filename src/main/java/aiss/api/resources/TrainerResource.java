@@ -234,9 +234,6 @@ public class TrainerResource {
                 listpoke.add(pkmn);
             }
         }
-        if(listpoke.size()>6) {
-            throw new BadRequestException("A team cannot have more than 6 Pokémon");
-        }
         trainer.setPokemons(listpoke);
         
         // Update name
@@ -254,8 +251,14 @@ public class TrainerResource {
         
         // Update Pokemons
         if (trainer.getPokemons() != null) {
+            if(trainer.getPokemons().size()>6) {
+                throw new BadRequestException("A team cannot have more than 6 Pokémon");
+            } else {
             oldtrainer.setPokemons(trainer.getPokemons());
+            }
         }
+        
+
         
         return Response.noContent().build();
     }

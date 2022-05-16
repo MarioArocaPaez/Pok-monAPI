@@ -49,18 +49,20 @@ public class GymResource {
 		return _instance; 
 	}
 	
-	@GET
-	@Produces("application/json")
-	public Collection<Gym> getAll( @QueryParam("order") String order,
-		 @QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit)
-	{
-	
-		List<Gym> result = new ArrayList<Gym>();
-		
-		// Filter
-		for (Gym btl: repository.getAllGyms()) {
-					result.add(btl);
-		}
+    @GET
+    @Produces("application/json")
+    public Collection<Gym> getAll(@QueryParam("type") String type, @QueryParam("order") String order,
+         @QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit)
+    {
+    
+        List<Gym> result = new ArrayList<Gym>();
+        
+        // Filter
+        for (Gym gym: repository.getAllGyms()) {
+            if(type == null || gym.getType().equals(type)) {
+                result.add(gym);
+            }         
+        }
 		
 		Collections.sort(result, (p1,p2) -> p1.getId().compareTo(p2.getId()));
 		
@@ -124,6 +126,7 @@ public class GymResource {
         if (gym.getLeader() == null)
             throw new BadRequestException("The leader of the Gym must not be null");
        
+        //check only the id of the trainers and add the object
         List<String> everyHelperId = repository.getAllTrainers().stream().map(x->x.getId())
         		.collect(Collectors.toList());
         List<Trainer> listhelper = new ArrayList<>();
@@ -140,6 +143,32 @@ public class GymResource {
             throw new BadRequestException("The id of the leader of the Gym doesn't exist");
         }
         gym.setHelpers(listhelper);
+        
+        //check that one of the helpers isn't already the leader
+        if (listhelper.contains(gym.getLeader())) {
+            throw new BadRequestException(gym.getLeader().getName() + " cannot be leader and helper at the same time");
+        }
+        
+        //for each helper, at least one of their pokémon must be of the gym's type
+        for(Trainer h: listhelper) {
+            Boolean cond = false;
+        	for(Pokemon p: h.getPokemons()) {
+        		if(gym.getType().equals(p.getType1()) || gym.getType().equals(p.getType2())) {
+        			cond = true;
+        		}
+        	}
+        	if(!cond) {
+        		throw new BadRequestException(h.getName() + " (one of the gym's helpers) doesn't have any Pokémon of the gym's type");
+        	}
+        }
+        
+        //the leader's pokemon must be all of the gym's type
+    	for(Pokemon p: gym.getLeader().getPokemons()) {
+    		if(!(gym.getType().equals(p.getType1()) || gym.getType().equals(p.getType2()))) {
+    			throw new BadRequestException("The leader must have all of their Pokémon of the gym's type");
+    		}	
+    	}
+
         repository.addGym(gym);
 
         UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
@@ -158,18 +187,67 @@ public class GymResource {
             throw new NotFoundException("The Gym with id="+ gym.getId() +" was not found");            
         }
         
+        //check only the id of the trainers and add the object
+        List<String> everyHelperId = repository.getAllTrainers().stream().map(x->x.getId())
+        		.collect(Collectors.toList());
+        List<Trainer> listhelper = new ArrayList<>();
+        
+        if (gym.getHelpers()!=null) {
+	        for (Trainer h : gym.getHelpers()) {
+	            if (everyHelperId.contains(h.getId())) {
+	                h = repository.getTrainer(h.getId());
+	                listhelper.add(h);
+	            }
+	        }
+	        gym.setHelpers(listhelper);
+        }
+        
+        
+        if (gym.getLeader() != null) {
+	        if(everyHelperId.contains(gym.getLeader().getId())) {
+	        	gym.setLeader(repository.getTrainer(gym.getLeader().getId()));
+	        } else {
+	            throw new BadRequestException("The id of the leader of the Gym doesn't exist");
+	        }
+        }
+        
         // Update type
         if (gym.getType()!=null)
             oldgym.setType(gym.getType());
         
-        // Update helpers
-        if (gym.getHelpers()!=null)
-            oldgym.setHelpers(gym.getHelpers());
-        
-        // Update leader
-        if (gym.getLeader() != null) {
-            oldgym.setLeader(gym.getLeader());
+        //check that one of the helpers isn't already the leader
+        if (gym.getHelpers()!=null) {
+	        if (listhelper.contains(gym.getLeader())) {
+	            throw new BadRequestException(gym.getLeader().getName() + " cannot be leader and helper at the same time");
+	        }
         }
+        
+        //for each helper, at least one of their pokémon must be of the gym's type
+        if (gym.getHelpers()!=null) {
+	        for(Trainer h: listhelper) {
+	            Boolean cond = false;
+	        	for(Pokemon p: h.getPokemons()) {
+	        		if(oldgym.getType().equals(p.getType1()) || oldgym.getType().equals(p.getType2())) {
+	        			cond = true;
+	        		}
+	        	}
+	        	if(!cond) {
+	        		throw new BadRequestException(h.getName() + " (one of the gym's helpers) doesn't have any Pokémon of the gym's type");
+	        	}
+	        }
+        }
+        
+        //the leader's pokemon must be all of the gym's type
+        if (gym.getLeader() != null) {
+	    	for(Pokemon p: gym.getLeader().getPokemons()) {
+	    		if(!(oldgym.getType().equals(p.getType1()) || oldgym.getType().equals(p.getType2()))) {
+	    			throw new BadRequestException("The leader must have all of their Pokémon of the gym's type");
+	    		}	
+	    	}
+        }
+        
+    	oldgym.setLeader(gym.getLeader());
+        oldgym.setHelpers(gym.getHelpers());
         
         return Response.noContent().build();
     }
@@ -191,8 +269,7 @@ public class GymResource {
 	@Consumes("text/plain")
 	@Produces("application/json")
 	public Response addHelper(@Context UriInfo uriInfo,@PathParam("gymId") String gymId, 
-			@PathParam("trainerId") String helperId)
-	{				
+			@PathParam("trainerId") String helperId) {				
 		
 		Gym g = repository.getGym(gymId);
 		Trainer tr = repository.getTrainer(helperId);
@@ -202,6 +279,22 @@ public class GymResource {
 		
 		if (g == null)
 			throw new NotFoundException("The Gym with id=" + gymId + " was not found");
+		
+        //check that one of the helpers isn't already the leader
+        if (g.getLeader().equals(tr)) {
+            throw new BadRequestException(tr.getName() + " cannot be leader and helper at the same time");
+        }
+        
+        //for each helper, at least one of their pokémon must be of the gym's type
+            Boolean cond = false;
+        	for(Pokemon p: tr.getPokemons()) {
+        		if(g.getType().equals(p.getType1()) || g.getType().equals(p.getType2())) {
+        			cond = true;
+        		}
+        	}
+        	if(!cond) {
+        		throw new BadRequestException(tr.getName() + " (one of the gym's helpers) doesn't have any Pokémon of the gym's type");
+        	}
 			
 		repository.addHelper(gymId, helperId);		
 
@@ -224,8 +317,7 @@ public class GymResource {
 		
 		if (g == null)
 			throw new NotFoundException("The Gym with id=" + gymId + " was not found");
-		
-		
+        
 		repository.removeHelper(gymId, helperId);		
 		
 		return Response.noContent().build();
