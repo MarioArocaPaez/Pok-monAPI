@@ -417,7 +417,7 @@ public class MapTrainerRepository implements TrainerRepository{
 		
 		Gym g = new Gym();
 		g.setLeader(blue);
-		g.setHelpers(List.of(JJ, red);
+		g.setHelpers(List.of(JJ, red));
 		g.setType("Electric");
 		addGym(g);
 		
