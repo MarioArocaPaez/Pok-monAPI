@@ -135,7 +135,7 @@ public class MapTrainerRepository implements TrainerRepository{
 		magmar.setHp(60);
 		magmar.setAttack(60);
 		magmar.setDefense(50);
-		magmar.setGeneration(2);
+		magmar.setGeneration(1);
 		magmar.setLegend(false);
 		addPokemon(magmar);
 		
@@ -183,16 +183,16 @@ public class MapTrainerRepository implements TrainerRepository{
 		crobat.setLegend(false);
 		addPokemon(crobat);
 		
-		Pokemon venosaur =new Pokemon();
-		venosaur.setName("Venosaur");
-		venosaur.setType1("Grass");
-		venosaur.setType2("Poison");
-		venosaur.setHp(80);
-		venosaur.setAttack(40);
-		venosaur.setDefense(70);
-		venosaur.setGeneration(1);
-		venosaur.setLegend(false);
-		addPokemon(venosaur);
+		Pokemon venusaur =new Pokemon();
+		venusaur.setName("Venusaur");
+		venusaur.setType1("Grass");
+		venusaur.setType2("Poison");
+		venusaur.setHp(80);
+		venusaur.setAttack(40);
+		venusaur.setDefense(70);
+		venusaur.setGeneration(1);
+		venusaur.setLegend(false);
+		addPokemon(venusaur);
 		
 		Pokemon bastiodon =new Pokemon();
 		bastiodon.setName("Bastiodon");
@@ -256,9 +256,53 @@ public class MapTrainerRepository implements TrainerRepository{
 		registeel.setHp(50);
 		registeel.setAttack(30);
 		registeel.setDefense(80);
-		registeel.setGeneration(2);
+		registeel.setGeneration(3);
 		registeel.setLegend(true);
 		addPokemon(registeel);
+		
+		Pokemon jirachi =new Pokemon();
+		jirachi.setName("Jirachi");
+		jirachi.setType1("Steel");
+		jirachi.setType2("Psychic");
+		jirachi.setHp(80);
+		jirachi.setAttack(30);
+		jirachi.setDefense(60);
+		jirachi.setGeneration(3);
+		jirachi.setLegend(true);
+		addPokemon(jirachi);
+
+		Pokemon cosmog =new Pokemon();
+		cosmog.setName("Cosmog");
+		cosmog.setType1("Steel");
+		cosmog.setType2(null);
+		cosmog.setHp(50);
+		cosmog.setAttack(20);
+		cosmog.setDefense(30);
+		cosmog.setGeneration(7);
+		cosmog.setLegend(true);
+		addPokemon(cosmog);
+
+		Pokemon yamper =new Pokemon();
+		yamper.setName("Yamper");
+		yamper.setType1("Electric");
+		yamper.setType2(null);
+		yamper.setHp(50);
+		yamper.setAttack(30);
+		yamper.setDefense(20);
+		yamper.setGeneration(8);
+		yamper.setLegend(false);
+		addPokemon(yamper);
+
+		Pokemon victini =new Pokemon();
+		victini.setName("Victini");
+		victini.setType1("Fire");
+		victini.setType2(null);
+		victini.setHp(50);
+		victini.setAttack(50);
+		victini.setDefense(40);
+		victini.setGeneration(5);
+		victini.setLegend(true);
+		addPokemon(victini);
 		
 		// Create trainers
 		Trainer red=new Trainer();
@@ -334,12 +378,12 @@ public class MapTrainerRepository implements TrainerRepository{
 		addPokemonToTrainer(edgelord.getId(), sharpedo.getName());
 		addPokemonToTrainer(JJ.getId(), magnezone.getName());
 		addPokemonToTrainer(JJ.getId(), registeel.getName());
-		addPokemonToTrainer(joselin.getId(), venosaur.getName());
+		addPokemonToTrainer(joselin.getId(), venusaur.getName());
 		addPokemonToTrainer(joselin.getId(), bastiodon.getName());
 		addPokemonToTrainer(joselin.getId(), groudon.getName());
 		addPokemonToTrainer(josefina.getId(), beedrill.getName());
 		addPokemonToTrainer(josefina.getId(), charizard.getName());
-		addPokemonToTrainer(leaf.getId(), venosaur.getName());
+		addPokemonToTrainer(leaf.getId(), venusaur.getName());
 		addPokemonToTrainer(leaf.getId(), pelipper.getName());
 		addPokemonToTrainer(leaf.getId(), registeel.getName());
 		addPokemonToTrainer(leaf.getId(), sharpedo.getName());
@@ -350,8 +394,16 @@ public class MapTrainerRepository implements TrainerRepository{
 		Battle test = new Battle();
 		test.setTr1(joselin);
 		test.setTr2(josefina);
-		test.setWinner(joselin);
+		test.setName("A battle for the ages");
+		test.setWinner(josefina);
 		addBattle(test);
+		
+		Battle b2 = new Battle();
+		b2.setTr1(red);
+		b2.setTr2(blue);
+		test.setName("Red VS Blue");
+		b2.setWinner(red);
+		addBattle(b2);
 		
 		//Create Gym
 		Gym testg = new Gym();
@@ -362,6 +414,12 @@ public class MapTrainerRepository implements TrainerRepository{
 		testg.setHelpers(help);
 		testg.setType("Flying");
 		addGym(testg);
+		
+		Gym g = new Gym();
+		g.setLeader(blue);
+		g.setHelpers(List.of(JJ, red);
+		g.setType("Electric");
+		addGym(g);
 		
 		
 	}
