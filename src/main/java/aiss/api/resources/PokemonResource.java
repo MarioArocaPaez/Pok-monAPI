@@ -158,16 +158,32 @@ public class PokemonResource {
 	@Consumes("application/json")
 	@Produces("application/json")
 	public Response addPokemon(@Context UriInfo uriInfo, Pokemon poke) {
+		List<String> types = Arrays.asList("Normal", "Fight", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel",
+				"Fire", "Water", "Grass", "Electric", "Physic", "Ice", "Dragon", "Dark", "Fairy");
+		
 		if (poke.getName() == null || "".equals(poke.getName()))
 			throw new BadRequestException("The name of the Pokémon must not be null");
-		if (poke.getType1() == null || "".equals(poke.getType1()))
-			throw new BadRequestException("The first type of the Pokémon must not be null");
+		if (!types.contains(poke.getType1()))
+			throw new BadRequestException("Type 1 can only be one of the followings: Normal, Fight, Flying, Poison, Ground, Rock, Bug, Ghost, Steel, "
+					+ "Fire, Water, Grass, Electric, Physic, Ice, Dragon, Dark or Fairy");
+		if (!types.contains(poke.getType2()))
+			throw new BadRequestException("Type 2 can only be null or one of the followings: Normal, Fight, Flying, Poison, Ground, Rock, Bug, Ghost, Steel, "
+					+ "Fire, Water, Grass, Electric, Physic, Ice, Dragon, Dark or Fairy");
 		if (poke.getHp() == null)
 			throw new BadRequestException("The Health Points of the Pokémon must not be null");
+		if (poke.getHp() < 0 || poke.getHp() > 300)
+			throw new BadRequestException("The Health Points of the Pokémon must be between 0 and 300");
+		if (poke.getAttack() < 0 || poke.getAttack() > 300)
+			throw new BadRequestException("The Attack of the Pokémon must be between 0 and 300");
 		if (poke.getAttack() == null)
 			throw new BadRequestException("The Attack of the Pokémon must not be null");
+		if (poke.getDefense() < 0 || poke.getDefense() > 300)
+			throw new BadRequestException("The Defense of the Pokémon must be between 0 and 300");
 		if (poke.getDefense() == null)
 			throw new BadRequestException("The Defense of the Pokémon must not be null");
+		if(poke.getGeneration() < 1 || poke.getGeneration() > 8) {
+			throw new BadRequestException("The Generation of the Pokémon must be between 1 and 8");
+		}
 
 		repository.addPokemon(poke);
 
